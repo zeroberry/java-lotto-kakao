@@ -17,7 +17,12 @@ public class CustomLottoMachine implements LottoMachine {
     }
 
     @Override
-    public LottoGroup generate() {
+    public LottoGroup autoGenerate() {
         return lottoGroups.remove();
+    }
+
+    @Override
+    public LottoGroup manualGenerate(List<Integer> numbers) {
+        return new LottoGroup(numbers);
     }
 }

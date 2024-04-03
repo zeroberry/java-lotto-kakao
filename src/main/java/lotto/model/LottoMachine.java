@@ -1,7 +1,10 @@
 package lotto.model;
 
-@FunctionalInterface
+import java.util.List;
+
 public interface LottoMachine {
 
-    LottoGroup generate();
+    LottoGroup autoGenerate();
+
+    LottoGroup manualGenerate(List<Integer> numbers);
 }

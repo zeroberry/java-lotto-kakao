@@ -16,8 +16,14 @@ public class RandomLottoMachine implements LottoMachine {
             .boxed()
             .collect(Collectors.toList());
 
-    public LottoGroup generate() {
+    @Override
+    public LottoGroup autoGenerate() {
         Collections.shuffle(lottoNumbers);
         return new LottoGroup(lottoNumbers.subList(ZERO, LOTTO_BALLS_COUNT));
+    }
+
+    @Override
+    public LottoGroup manualGenerate(List<Integer> numbers) {
+        return new LottoGroup(numbers);
     }
 }
