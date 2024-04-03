@@ -29,10 +29,10 @@ public enum LottoRoundResult {
         if (count == FOUR) {
             return LottoRoundResult.FOURTH;
         }
-        if (count == FIVE) {
+        if (count == FIVE && !bonusMatch) {
             return LottoRoundResult.THIRD;
         }
-        if (count == SIX && bonusMatch) {
+        if (count == FIVE) {
             return LottoRoundResult.SECOND;
         }
         if (count == SIX) {
