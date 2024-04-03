@@ -2,6 +2,7 @@ package lotto.model;
 
 import lotto.model.vo.PurchaseMoney;
 import lotto.model.vo.RevenueRate;
+import lotto.model.vo.WinningMoney;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -39,15 +40,17 @@ public class WinningStatistics {
     }
 
     public RevenueRate calculateRevenueRate() {
-        final BigDecimal totalPrice = calculateTotalPrice();
+        final WinningMoney totalPrice = calculateTotalPrice();
         final PurchaseMoney purchaseMoney = findPurchaseMoney();
-        return new RevenueRate(totalPrice.divide(purchaseMoney.toBigDecimal(), ROUND_SCALE, RoundingMode.HALF_UP).doubleValue());
+        return new RevenueRate(new BigDecimal(totalPrice.getAmount()).divide(purchaseMoney.toBigDecimal(), ROUND_SCALE, RoundingMode.HALF_UP).doubleValue());
     }
 
-    private BigDecimal calculateTotalPrice() {
+    private WinningMoney calculateTotalPrice() {
         return statistics.entrySet().stream()
-                .map(entry -> new BigDecimal(entry.getKey().getPrice()).multiply(BigDecimal.valueOf(entry.getValue())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(entry -> entry.getKey().getWinningMoney().multiply(BigDecimal.valueOf(entry.getValue())))
+                .reduce(WinningMoney::add)
+                .orElse(new WinningMoney(ZERO));
+
     }
 
     private PurchaseMoney findPurchaseMoney() {
