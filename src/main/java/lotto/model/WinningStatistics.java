@@ -52,8 +52,8 @@ public class WinningStatistics {
 
     private PurchaseMoney findPurchaseMoney() {
         return new PurchaseMoney(statistics.values().stream()
-                        .mapToInt(Integer::intValue)
-                        .sum() * LOTTO_PRICE);
+                .mapToInt(Integer::intValue)
+                .sum() * LOTTO_PRICE);
     }
 
     public Map<LottoRoundResult, Integer> getStatistics() {
