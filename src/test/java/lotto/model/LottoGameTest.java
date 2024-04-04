@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.Map;
 
 import static lotto.model.LottoRoundResult.BOOM;
 import static lotto.model.LottoRoundResult.FIRST;
@@ -31,7 +32,7 @@ class LottoGameTest {
                 new CustomAutoGenerator(List.of(1, 2, 3, 4, 5, 6), List.of(7, 8, 9, 10, 11, 12))
         );
         final WinningGroup winningGroup = new WinningGroup("1, 2, 3, 4, 5, 6", 7);
-        final WinningStatistics expectedStatistics = new WinningStatistics(List.of(FIRST, BOOM));
+        final WinningStatistics expectedStatistics = new WinningStatistics(Map.of(FIRST, 1, BOOM, 1));
 
         // when
         lottoGame.runAutoLottos(2);

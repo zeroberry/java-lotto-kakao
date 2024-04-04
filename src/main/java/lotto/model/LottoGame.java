@@ -2,6 +2,7 @@ package lotto.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,8 +42,11 @@ public class LottoGame {
 
     public WinningStatistics makeResult(final WinningGroup winningGroup) {
         return new WinningStatistics(lottoGroups.stream()
-                .map(winningGroup::calculateRoundResult)
-                .collect(Collectors.toUnmodifiableList())
+                .collect(Collectors.groupingBy(
+                        winningGroup::calculateRoundResult,
+                        () -> new EnumMap<>(LottoRoundResult.class),
+                        Collectors.summingInt(it -> 1)
+                ))
         );
     }
 }
