@@ -24,7 +24,7 @@ public class WinningGroup {
         this(new LottoGroup(Arrays.stream(winningNumbers.split(SPLIT_REGEX))
                         .map(Integer::parseInt)
                         .collect(Collectors.toUnmodifiableList())),
-                new LottoBall(bonusNumber));
+                LottoBallFactory.getLottoBall(bonusNumber));
     }
 
     private void validateDuplicate(final LottoGroup lottoGroup, final LottoBall bonusBall) {

@@ -20,7 +20,7 @@ public class LottoGroup {
         validateDuplicateBalls(numbers);
 
         this.balls = numbers.stream()
-                .map(LottoBall::new)
+                .map(LottoBallFactory::getLottoBall)
                 .collect(Collectors.toUnmodifiableList());
     }
 
