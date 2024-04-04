@@ -1,7 +1,7 @@
 package lotto.model;
 
-import lotto.model.vo.PurchaseCount;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,11 +9,30 @@ import java.util.stream.Stream;
 public class LottoGame {
 
     private final List<LottoGroup> lottoGroups;
+    private final LottoMachine lottoMachine;
 
-    public LottoGame(final PurchaseCount purchaseCount, final LottoMachine lottoMachine) {
-        this.lottoGroups = Stream.generate(lottoMachine::autoGenerate)
-                .limit(purchaseCount.getCount())
+    public LottoGame(final AutoGenerator autoGenerator) {
+        this.lottoMachine = new LottoMachine(autoGenerator);
+        this.lottoGroups = new ArrayList<>();
+    }
+
+    public void addManualLottos(final List<String> manualLottoInputs) {
+        manualLottoInputs.forEach(this::addManualLotto);
+    }
+
+    private void addManualLotto(final String manualLottoInput) {
+        final List<Integer> customLotto = Arrays.stream(manualLottoInput.split(", "))
+                .map(Integer::parseInt)
                 .collect(Collectors.toUnmodifiableList());
+        lottoGroups.add(lottoMachine.manualGenerate(customLotto));
+    }
+
+    public void runAutoLottos(final int count) {
+        lottoGroups.addAll(
+                Stream.generate(lottoMachine::autoGenerate)
+                        .limit(count)
+                        .collect(Collectors.toUnmodifiableList())
+        );
     }
 
     public List<LottoGroup> getLottoGroups() {
