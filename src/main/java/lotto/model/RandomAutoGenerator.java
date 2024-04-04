@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class RandomLottoMachine implements LottoMachine {
+public class RandomAutoGenerator implements AutoGenerator {
 
     private static final int MIN_LOTTO_NUM = 1;
     private static final int MAX_LOTTO_NUM = 45;
@@ -17,13 +17,8 @@ public class RandomLottoMachine implements LottoMachine {
             .collect(Collectors.toList());
 
     @Override
-    public LottoGroup autoGenerate() {
+    public List<Integer> generate() {
         Collections.shuffle(lottoNumbers);
-        return new LottoGroup(lottoNumbers.subList(ZERO, LOTTO_BALLS_COUNT));
-    }
-
-    @Override
-    public LottoGroup manualGenerate(List<Integer> numbers) {
-        return new LottoGroup(numbers);
+        return lottoNumbers.subList(ZERO, LOTTO_BALLS_COUNT);
     }
 }
