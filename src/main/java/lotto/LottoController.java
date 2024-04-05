@@ -6,6 +6,7 @@ import lotto.model.LottoGame;
 import lotto.model.RandomAutoGenerator;
 import lotto.model.WinningGroup;
 import lotto.model.WinningStatistics;
+import lotto.model.vo.ManualLottoCount;
 import lotto.model.vo.PurchaseCount;
 import lotto.model.vo.PurchaseMoney;
 import lotto.view.InputView;
@@ -19,25 +20,28 @@ public class LottoController {
 
     public void run() {
         final PurchaseCount purchaseCount = makePurchaseCount();
-        final List<String> manualLottoInputs = readManualLottoInputs();
 
-        buyLottos(manualLottoInputs, purchaseCount);
+        final ManualLottoCount manualLottoCount = new ManualLottoCount(InputView.readManualLottoCount());
+        purchaseCount.validateManualPurchaseCount(manualLottoCount);
+
+        List<String> manualLottoInputs = getManualLottoInputs(manualLottoCount);
+
+        buyLottos(manualLottoInputs, purchaseCount, manualLottoCount);
 
         final WinningGroup winningGroup = makeWinningGroup();
         executeResult(winningGroup);
     }
 
-    private List<String> readManualLottoInputs() {
-        final int manualLottoCount = InputView.readManualLottoCount();
-        if (manualLottoCount == 0) {
+    private List<String> getManualLottoInputs(final ManualLottoCount manualLottoCount) {
+        if (manualLottoCount.isZero()) {
             return List.of();
         }
-        return InputView.readManualLottoInputs(manualLottoCount);
+        return InputView.readManualLottoInputs(manualLottoCount.getCount());
     }
 
-    private void buyLottos(List<String> customLottoInputs, PurchaseCount purchaseCount) {
+    private void buyLottos(final List<String> customLottoInputs, final PurchaseCount purchaseCount, final ManualLottoCount manualLottoCount) {
         lottoGame.addManualLottos(customLottoInputs);
-        lottoGame.runAutoLottos(purchaseCount.getCount() - customLottoInputs.size());
+        lottoGame.runAutoLottos(purchaseCount.calculateAutoLottoCount(manualLottoCount));
 
         OutputView.printLottoGroups(
                 customLottoInputs.size(),
