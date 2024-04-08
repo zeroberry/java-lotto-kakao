@@ -16,9 +16,9 @@ import java.util.List;
 
 public class LottoController {
 
-    private final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator());
-
     public void run() {
+        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator());
+
         final PurchaseCount purchaseCount = makePurchaseCount();
 
         final ManualLottoCount manualLottoCount = new ManualLottoCount(InputView.readManualLottoCount());
@@ -26,10 +26,10 @@ public class LottoController {
 
         List<String> manualLottoInputs = getManualLottoInputs(manualLottoCount);
 
-        buyLottos(manualLottoInputs, purchaseCount, manualLottoCount);
+        buyLottos(lottoGame, manualLottoInputs, purchaseCount, manualLottoCount);
 
         final WinningGroup winningGroup = makeWinningGroup();
-        executeResult(winningGroup);
+        executeResult(lottoGame, winningGroup);
     }
 
     private List<String> getManualLottoInputs(final ManualLottoCount manualLottoCount) {
@@ -39,7 +39,7 @@ public class LottoController {
         return InputView.readManualLottoInputs(manualLottoCount.getCount());
     }
 
-    private void buyLottos(final List<String> customLottoInputs, final PurchaseCount purchaseCount, final ManualLottoCount manualLottoCount) {
+    private void buyLottos(final LottoGame lottoGame, final List<String> customLottoInputs, final PurchaseCount purchaseCount, final ManualLottoCount manualLottoCount) {
         lottoGame.addManualLottos(customLottoInputs);
         lottoGame.runAutoLottos(purchaseCount.calculateAutoLottoCount(manualLottoCount));
 
@@ -60,7 +60,7 @@ public class LottoController {
         return new WinningGroup(winningGroupInput, bonusBallInput);
     }
 
-    private void executeResult(final WinningGroup winningGroup) {
+    private void executeResult(final LottoGame lottoGame, final WinningGroup winningGroup) {
         final WinningStatistics winningStatistics = lottoGame.makeResult(winningGroup);
         final GameResultDTO gameResultDTO = new GameResultDTO(winningStatistics.getStatistics(), winningStatistics.calculateRevenueRate().getValue());
         OutputView.printGameResult(gameResultDTO);
