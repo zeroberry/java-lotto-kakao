@@ -12,12 +12,15 @@ public class LottoGame {
     private final List<LottoGroup> lottoGroups;
     private final LottoMachine lottoMachine;
 
-    public LottoGame(final AutoGenerator autoGenerator) {
+    public LottoGame(final AutoGenerator autoGenerator, final List<String> manualLottoInputs, final int autoLottoCount) {
         this.lottoMachine = new LottoMachine(autoGenerator);
         this.lottoGroups = new ArrayList<>();
+
+        addManualLottos(manualLottoInputs);
+        addAutoLottos(autoLottoCount);
     }
 
-    public void addManualLottos(final List<String> manualLottoInputs) {
+    private void addManualLottos(final List<String> manualLottoInputs) {
         manualLottoInputs.forEach(this::addManualLotto);
     }
 
@@ -28,7 +31,7 @@ public class LottoGame {
         lottoGroups.add(lottoMachine.manualGenerate(customLotto));
     }
 
-    public void runAutoLottos(final int count) {
+    private void addAutoLottos(final int count) {
         lottoGroups.addAll(
                 Stream.generate(lottoMachine::autoGenerate)
                         .limit(count)

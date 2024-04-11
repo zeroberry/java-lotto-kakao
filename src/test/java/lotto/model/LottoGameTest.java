@@ -18,8 +18,7 @@ class LottoGameTest {
     @ValueSource(ints = {1, 2, 3, 4, 10, 15})
     void 로또_그룹을_가지고_있다(final int purchaseNumber) {
         // given
-        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator());
-        lottoGame.runAutoLottos(purchaseNumber);
+        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator(), List.of(), purchaseNumber);
 
         // when & then
         assertThat(lottoGame.getLottoGroups()).hasSize(purchaseNumber);
@@ -29,13 +28,14 @@ class LottoGameTest {
     void 당첨_그룹을_받아_당첨_통계를_반환할_수_있다() {
         // given
         final LottoGame lottoGame = new LottoGame(
-                new CustomAutoGenerator(List.of(1, 2, 3, 4, 5, 6), List.of(7, 8, 9, 10, 11, 12))
+                new CustomAutoGenerator(List.of(1, 2, 3, 4, 5, 6), List.of(7, 8, 9, 10, 11, 12)),
+                List.of(),
+                2
         );
         final WinningGroup winningGroup = new WinningGroup("1, 2, 3, 4, 5, 6", 7);
         final WinningStatistics expectedStatistics = new WinningStatistics(Map.of(FIRST, 1, BOOM, 1));
 
         // when
-        lottoGame.runAutoLottos(2);
         final WinningStatistics actualStatistics = lottoGame.makeResult(winningGroup);
 
         // then

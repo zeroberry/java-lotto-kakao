@@ -17,8 +17,6 @@ import java.util.List;
 public class LottoController {
 
     public void run() {
-        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator());
-
         final PurchaseCount purchaseCount = makePurchaseCount();
 
         final ManualLottoCount manualLottoCount = new ManualLottoCount(InputView.readManualLottoCount());
@@ -26,7 +24,15 @@ public class LottoController {
 
         List<String> manualLottoInputs = getManualLottoInputs(manualLottoCount);
 
-        buyLottos(lottoGame, manualLottoInputs, purchaseCount, manualLottoCount);
+        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator(),
+                manualLottoInputs,
+                purchaseCount.calculateAutoLottoCount(manualLottoCount));
+
+        OutputView.printLottoGroups(
+                manualLottoInputs.size(),
+                purchaseCount.getCount() - manualLottoInputs.size(),
+                new LottoGroupDTOs(lottoGame.getLottoGroups())
+        );
 
         final WinningGroup winningGroup = makeWinningGroup();
         executeResult(lottoGame, winningGroup);
@@ -37,16 +43,6 @@ public class LottoController {
             return List.of();
         }
         return InputView.readManualLottoInputs(manualLottoCount.getCount());
-    }
-
-    private void buyLottos(final LottoGame lottoGame, final List<String> customLottoInputs, final PurchaseCount purchaseCount, final ManualLottoCount manualLottoCount) {
-        lottoGame.addManualLottos(customLottoInputs);
-        lottoGame.runAutoLottos(purchaseCount.calculateAutoLottoCount(manualLottoCount));
-
-        OutputView.printLottoGroups(
-                customLottoInputs.size(),
-                purchaseCount.getCount() - customLottoInputs.size(),
-                new LottoGroupDTOs(lottoGame.getLottoGroups()));
     }
 
     private PurchaseCount makePurchaseCount() {
