@@ -21,14 +21,15 @@ public class PurchaseCount {
         }
     }
 
-    public void validateManualPurchaseCount(final ManualLottoCount manualLottoCount) {
+    public int calculateAutoLottoCount(final ManualLottoCount manualLottoCount) {
+        validateManualPurchaseCount(manualLottoCount);
+        return this.count - manualLottoCount.getCount();
+    }
+
+    private void validateManualPurchaseCount(final ManualLottoCount manualLottoCount) {
         if (count < manualLottoCount.getCount()) {
             throw new IllegalArgumentException(INVALID_MANUAL_LOTTO_COUNT_MESSAGE);
         }
-    }
-
-    public int calculateAutoLottoCount(final ManualLottoCount manualLottoCount) {
-        return this.count - manualLottoCount.getCount();
     }
 
     public int getCount() {

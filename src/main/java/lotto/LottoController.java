@@ -20,13 +20,10 @@ public class LottoController {
         final PurchaseCount purchaseCount = makePurchaseCount();
 
         final ManualLottoCount manualLottoCount = new ManualLottoCount(InputView.readManualLottoCount());
-        purchaseCount.validateManualPurchaseCount(manualLottoCount);
+        int autoLottoCount = purchaseCount.calculateAutoLottoCount(manualLottoCount);
 
         List<String> manualLottoInputs = getManualLottoInputs(manualLottoCount);
-
-        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator(),
-                manualLottoInputs,
-                purchaseCount.calculateAutoLottoCount(manualLottoCount));
+        final LottoGame lottoGame = new LottoGame(new RandomAutoGenerator(), manualLottoInputs, autoLottoCount);
 
         OutputView.printLottoGroups(
                 manualLottoInputs.size(),
